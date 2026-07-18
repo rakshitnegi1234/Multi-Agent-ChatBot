@@ -150,26 +150,32 @@ function ChatInput({
   };
 
   return (
-    <div className="relative z-10 w-full shrink-0 border-t border-white/[0.06] bg-[#0d0f14]/90 px-3 py-3 backdrop-blur-xl md:px-5 md:py-4">
+    <div className="relative z-10 w-full shrink-0 border-t border-white/[0.06] bg-[#0d0f14]/88 px-3 py-3 backdrop-blur-xl md:px-5 md:py-4">
       <div
-        className={`mx-auto flex max-w-3xl flex-col gap-2 rounded-2xl border px-4 pt-3.5 pb-3 shadow-2xl transition-all duration-200 ${
+        className={`mx-auto flex max-w-3xl flex-col gap-2 rounded-2xl border px-3.5 pt-3.5 pb-3 shadow-2xl transition-all duration-200 sm:px-4 ${
           isResponding
             ? "border-cyan-400/20 bg-cyan-400/[0.035] shadow-cyan-950/20"
-            : "border-white/[0.09] bg-[#151821]/95 shadow-black/30 focus-within:border-cyan-400/30 focus-within:bg-[#181b24]"
+            : "border-white/[0.09] bg-[#151821]/95 shadow-black/30 focus-within:-translate-y-0.5 focus-within:border-cyan-400/30 focus-within:bg-[#181b24] focus-within:shadow-[0_18px_46px_rgba(8,145,178,0.13)]"
         }`}
       >
         <textarea
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && !event.shiftKey) {
+              event.preventDefault();
+              handleSendMessage();
+            }
+          }}
           disabled={isResponding}
           placeholder={
             isResponding ? "AgentForge is responding..." : "Ask anything..."
           }
-          className="max-h-36 min-h-16 w-full resize-none bg-transparent text-[14px] leading-relaxed text-slate-200 outline-none placeholder:text-slate-600 disabled:cursor-not-allowed disabled:opacity-55 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="max-h-36 min-h-14 w-full resize-none bg-transparent text-[14px] leading-relaxed text-slate-200 outline-none placeholder:text-slate-600 disabled:cursor-not-allowed disabled:opacity-55 sm:min-h-16 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           rows={3}
         />
-        <div className="flex items-end justify-between gap-3">
-          <div className="flex w-[80%] flex-wrap items-center gap-2 pr-2">
+        <div className="flex items-end justify-between gap-2 sm:gap-3">
+          <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto pr-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:pr-2">
             {agents.map((agent) => {
               const isActive = selectedAgent === agent.label;
               const Icon = agent.icon;
@@ -193,9 +199,10 @@ function ChatInput({
             })}
           </div>
           <button
+            type="button"
             disabled={!canSend}
             onClick={handleSendMessage}
-            className={`flex h-10 w-10 items-center justify-center rounded-xl border-none text-white transition-all duration-150 ${
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-none text-white transition-all duration-150 sm:h-11 sm:w-11 ${
               canSend
                 ? "cursor-pointer bg-linear-to-br from-cyan-500 to-indigo-600 shadow-[0_0_28px_rgba(34,211,238,0.22)] hover:-translate-y-0.5 hover:shadow-[0_0_34px_rgba(99,102,241,0.28)]"
                 : "cursor-not-allowed bg-white/[0.06] text-slate-600"

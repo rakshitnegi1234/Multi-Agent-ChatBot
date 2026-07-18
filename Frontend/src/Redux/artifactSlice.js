@@ -9,6 +9,7 @@ const artifactSlice = createSlice({
     isOpen: true,
   },
   reducers: {
+    
     setArtifact: (state, action) => {
       const artifact = action.payload?.artifact || action.payload;
       const conversationId = action.payload?.conversationId;

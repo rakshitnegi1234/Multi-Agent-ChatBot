@@ -22,10 +22,62 @@
   }
 }
 
+@keyframes message-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes surface-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .artifact-float {
   animation: artifact-float 4.5s ease-in-out infinite;
 }
 
 .artifact-glow {
   animation: artifact-glow 3.5s ease-in-out infinite;
+}
+
+.message-enter {
+  animation: message-enter 180ms ease-out both;
+}
+
+.surface-pop {
+  animation: surface-pop 220ms ease-out both;
+}
+
+.artifact-panel {
+  animation: surface-pop 180ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+
+  .artifact-float,
+  .artifact-glow,
+  .artifact-panel,
+  .message-enter,
+  .surface-pop {
+    animation: none !important;
+  }
 }

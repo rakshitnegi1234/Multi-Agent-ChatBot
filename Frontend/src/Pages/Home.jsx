@@ -3,6 +3,7 @@ import { auth, googleProvider } from "../../Utils/firebase.js";
 import api from "../../Utils/axios.js";
 import { FcGoogle } from "react-icons/fc";
 import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 import { setUserdata } from "../Redux/userSlice.js";
 import SideBar from "../Components/SideBar.jsx";
 import Artifacts from "../Components/Artifacts.jsx";
@@ -11,6 +12,7 @@ import ChatArea from "../Components/ChatArea.jsx";
 function Home() {
   const { userData } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   const handleLogin = async (token) => {
     try {
@@ -31,14 +33,18 @@ function Home() {
 
   return (
     <>
-      <div className="flex h-screen overflow-hidden bg-[#0d0f14] text-white">
-        <SideBar />
-        <ChatArea />
+      <div className="relative flex h-dvh overflow-hidden bg-[#0d0f14] text-white">
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(20,184,166,0.06),transparent_26%),linear-gradient(135deg,rgba(99,102,241,0.09),transparent_42%),linear-gradient(315deg,rgba(244,63,94,0.045),transparent_40%)]" />
+        <SideBar
+          mobileOpen={mobileSidebarOpen}
+          onMobileClose={() => setMobileSidebarOpen(false)}
+        />
+        <ChatArea onMenuClick={() => setMobileSidebarOpen(true)} />
         <Artifacts />
 
         {!userData && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 px-4 backdrop-blur">
-            <div className="flex w-full max-w-[360px] flex-col gap-5 rounded-2xl border border-white/[0.08] bg-[#13151c] p-7 shadow-2xl shadow-black/40">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur-md">
+            <div className="surface-pop flex w-full max-w-[370px] flex-col gap-5 rounded-2xl border border-white/[0.1] bg-[#13151c]/95 p-7 shadow-2xl shadow-black/50">
               <div className="flex flex-col gap-1">
                 <h2 className="text-[18px] font-semibold tracking-tight text-slate-100">
                   Welcome to AgentForge
@@ -49,7 +55,7 @@ function Home() {
               </div>
 
               <button
-                className="flex w-full items-center justify-center gap-3 rounded-xl bg-white py-[11px] text-sm font-medium text-black/90 transition-all duration-150 hover:-translate-y-0.5 hover:bg-gray-200"
+                className="flex w-full items-center justify-center gap-3 rounded-xl bg-white py-[11px] text-sm font-medium text-black/90 shadow-lg shadow-black/20 transition-all duration-150 hover:-translate-y-0.5 hover:bg-gray-200 active:translate-y-0"
                 onClick={googleLogin}
               >
                 <FcGoogle size={18} />

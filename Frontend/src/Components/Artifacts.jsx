@@ -182,12 +182,22 @@ function ActiveArtifact({ activeArtifact }) {
 
 function Artifacts() {
   const dispatch = useDispatch();
-  const { activeArtifact, isOpen } = useSelector((state) => state.artifact);
+  const { selectedConversation } = useSelector((state) => state.conversation);
+  const { activeArtifact, activeConversationId, isOpen } = useSelector(
+    (state) => state.artifact,
+  );
+  const visibleArtifact =
+    selectedConversation?._id &&
+    activeConversationId === selectedConversation._id
+      ? activeArtifact
+      : null;
 
   if (!isOpen) {
+    if (!visibleArtifact) return null;
+
     return (
       <button
-        className="fixed right-4 top-22 z-40 hidden h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-cyan-400/20 bg-[#151821] text-cyan-200 shadow-xl shadow-black/30 transition-all duration-150 hover:-translate-y-0.5 hover:bg-white/[0.07] hover:text-white xl:flex"
+        className="fixed bottom-24 right-4 z-40 flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-cyan-400/20 bg-[#151821] text-cyan-200 shadow-xl shadow-black/40 transition-all duration-150 hover:-translate-y-0.5 hover:bg-white/[0.07] hover:text-white active:scale-95 xl:bottom-auto xl:top-22"
         onClick={() => dispatch(setArtifactOpen(true))}
         title="Open artifacts"
       >
@@ -197,65 +207,83 @@ function Artifacts() {
   }
 
   return (
-    <aside className="hidden w-[430px] shrink-0 border-l border-white/[0.06] bg-[#0b0d12] xl:flex xl:flex-col">
-      {activeArtifact ? (
-        <ActiveArtifact
-          key={`${activeArtifact.title}-${activeArtifact.code?.length || 0}`}
-          activeArtifact={activeArtifact}
+    <>
+      {visibleArtifact && (
+        <button
+          aria-label="Close artifacts"
+          className="fixed inset-0 z-40 bg-black/55 backdrop-blur-sm xl:hidden"
+          onClick={() => dispatch(setArtifactOpen(false))}
+          type="button"
         />
-      ) : (
-        <>
-          <div className="flex h-16 items-center justify-between border-b border-white/[0.06] bg-[#10131a]/80 px-5">
-            <div className="min-w-0">
-              <h2 className="truncate text-[14px] font-semibold tracking-tight text-slate-100">
-                Artifacts
-              </h2>
-              <p className="mt-0.5 text-[11px] text-slate-600">empty</p>
+      )}
+      <aside
+        className={`artifact-panel fixed inset-y-3 right-3 z-50 flex h-[calc(100dvh_-_24px)] w-[min(430px,calc(100vw_-_24px))] shrink-0 flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0b0d12]/96 shadow-2xl shadow-black/50 backdrop-blur-xl transition-all duration-200 ease-out xl:static xl:z-auto xl:h-auto xl:w-[430px] xl:rounded-none xl:border-y-0 xl:border-r-0 xl:shadow-none ${
+          visibleArtifact
+            ? "translate-x-0 opacity-100"
+            : "pointer-events-none hidden translate-x-[calc(100%+24px)] opacity-0 xl:pointer-events-auto xl:flex xl:translate-x-0 xl:opacity-100"
+        }`}
+      >
+        {visibleArtifact ? (
+          <ActiveArtifact
+            key={`${activeConversationId}-${visibleArtifact.title}-${
+              visibleArtifact.code?.length || 0
+            }`}
+            activeArtifact={visibleArtifact}
+          />
+        ) : (
+          <>
+            <div className="flex h-16 items-center justify-between border-b border-white/[0.06] bg-[#10131a]/80 px-5">
+              <div className="min-w-0">
+                <h2 className="truncate text-[14px] font-semibold tracking-tight text-slate-100">
+                  Artifacts
+                </h2>
+                <p className="mt-0.5 text-[11px] text-slate-600">empty</p>
+              </div>
+              <button
+                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent text-slate-600 transition-colors duration-150 hover:bg-white/[0.07] hover:text-slate-300"
+                onClick={() => dispatch(setArtifactOpen(false))}
+                title="Close artifacts"
+              >
+                <PanelRightClose size={16} />
+              </button>
             </div>
-            <button
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent text-slate-600 transition-colors duration-150 hover:bg-white/[0.07] hover:text-slate-300"
-              onClick={() => dispatch(setArtifactOpen(false))}
-              title="Close artifacts"
-            >
-              <PanelRightClose size={16} />
-            </button>
-          </div>
 
-          <div className="flex flex-1 items-center justify-center px-6 text-center">
-            <div className="w-full max-w-[280px]">
-              <div className="artifact-float relative mx-auto mb-6 h-[132px] w-[200px]">
-                <div className="absolute left-0 top-5 h-[92px] w-[164px] rounded-2xl border border-white/[0.08] bg-white/[0.035] shadow-2xl shadow-black/30" />
-                <div className="absolute right-0 top-0 h-[106px] w-[170px] overflow-hidden rounded-2xl border border-cyan-300/20 bg-[#101923] shadow-[0_0_42px_rgba(34,211,238,0.10)]">
-                  <div className="flex h-7 items-center gap-1.5 border-b border-white/[0.07] px-3">
-                    <span className="h-1.5 w-1.5 rounded-full bg-rose-300/70" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-amber-300/70" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-300/70" />
-                  </div>
-                  <div className="grid grid-cols-[44px_1fr] gap-2 p-3">
-                    <div className="h-14 rounded-lg border border-cyan-300/15 bg-cyan-300/[0.07]" />
-                    <div className="space-y-2">
-                      <div className="h-2 rounded-full bg-slate-500/35" />
-                      <div className="h-2 rounded-full bg-slate-600/25" />
-                      <div className="h-6 rounded-lg border border-white/[0.06] bg-white/[0.04]" />
+            <div className="flex flex-1 items-center justify-center px-6 text-center">
+              <div className="w-full max-w-[280px]">
+                <div className="artifact-float relative mx-auto mb-6 h-[132px] w-[200px]">
+                  <div className="absolute left-0 top-5 h-[92px] w-[164px] rounded-2xl border border-white/[0.08] bg-white/[0.035] shadow-2xl shadow-black/30" />
+                  <div className="absolute right-0 top-0 h-[106px] w-[170px] overflow-hidden rounded-2xl border border-cyan-300/20 bg-[#101923] shadow-[0_0_42px_rgba(34,211,238,0.10)]">
+                    <div className="flex h-7 items-center gap-1.5 border-b border-white/[0.07] px-3">
+                      <span className="h-1.5 w-1.5 rounded-full bg-rose-300/70" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-amber-300/70" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-300/70" />
+                    </div>
+                    <div className="grid grid-cols-[44px_1fr] gap-2 p-3">
+                      <div className="h-14 rounded-lg border border-cyan-300/15 bg-cyan-300/[0.07]" />
+                      <div className="space-y-2">
+                        <div className="h-2 rounded-full bg-slate-500/35" />
+                        <div className="h-2 rounded-full bg-slate-600/25" />
+                        <div className="h-6 rounded-lg border border-white/[0.06] bg-white/[0.04]" />
+                      </div>
                     </div>
                   </div>
+                  <div className="artifact-glow absolute bottom-0 left-1/2 grid h-14 w-14 -translate-x-1/2 place-items-center rounded-2xl border border-cyan-300/25 bg-[#08222a] text-cyan-200">
+                    <Sparkles size={20} />
+                  </div>
                 </div>
-                <div className="artifact-glow absolute bottom-0 left-1/2 grid h-14 w-14 -translate-x-1/2 place-items-center rounded-2xl border border-cyan-300/25 bg-[#08222a] text-cyan-200">
-                  <Sparkles size={20} />
-                </div>
-              </div>
 
-              <p className="text-[14px] font-semibold text-slate-200">
-                No artifact selected
-              </p>
-              <p className="mx-auto mt-2 max-w-[220px] text-[12px] leading-relaxed text-slate-600">
-                Generated code previews will appear here.
-              </p>
+                <p className="text-[14px] font-semibold text-slate-200">
+                  No artifact selected
+                </p>
+                <p className="mx-auto mt-2 max-w-[220px] text-[12px] leading-relaxed text-slate-600">
+                  Generated code previews will appear here.
+                </p>
+              </div>
             </div>
-          </div>
-        </>
-      )}
-    </aside>
+          </>
+        )}
+      </aside>
+    </>
   );
 }
 

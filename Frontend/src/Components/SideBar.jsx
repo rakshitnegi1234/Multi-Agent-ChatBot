@@ -4,9 +4,9 @@ import {
   PenSquare,
   Plus,
   User,
-  Coins,
   LogOut,
   PanelRight,
+  X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getConversations } from "../Features/getConversations";
@@ -19,7 +19,7 @@ import { setUserdata } from "../Redux/userSlice.js";
 import { logOut } from "../Features/logOut.js";
 import { setMessages } from "../Redux/messageSlice.js";
 
-function SideBar() {
+function SideBar({ mobileOpen = false, onMobileClose }) {
   const [collapsed, setCollapsed] = useState(false);
   const [imageerror, setImageError] = useState(false);
   const dispatch = useDispatch();
@@ -49,6 +49,7 @@ function SideBar() {
 
     dispatch(setSelectedConversation(null));
     dispatch(setMessages([]));
+    onMobileClose?.();
   };
 
   const handleLogout = async () => {
@@ -57,6 +58,12 @@ function SideBar() {
     dispatch(setconversations([]));
     dispatch(setSelectedConversation(null));
     dispatch(setMessages([]));
+    onMobileClose?.();
+  };
+
+  const handleSelectConversation = (conversation) => {
+    dispatch(setSelectedConversation(conversation));
+    onMobileClose?.();
   };
 
   if (collapsed) {
@@ -68,7 +75,7 @@ function SideBar() {
         >
           <PanelRight />
         </button>
-        <div className="flex-1 overflow-y-auto px-2.5 pb-2 [scroll-width:none] [&::-webkit-scrollbar]:hidden pt-10">
+        <div className="flex-1 overflow-y-auto px-2.5 pb-2 pt-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {conversations.map((conv) => {
             const isActive = selectedConversation?._id === conv?._id;
 
@@ -97,7 +104,7 @@ function SideBar() {
         </div>
 
         <div className="relative shrink-0">
-          {userData?.avatar || !imageerror ? (
+          {userData?.avatar && !imageerror ? (
             <img
               className="w-9 h-9 rounded-[10px] object-cover border-2 border-indigo-500/25"
               src={userData?.avatar}
@@ -116,7 +123,20 @@ function SideBar() {
 
   return (
     <>
-      <div className="fixed inset-y-0 left-0 z-50 h-screen w-[270px] shrink-0 border-r border-white/[0.06] bg-[#0b0d12] lg:static">
+      {mobileOpen && (
+        <button
+          aria-label="Close sidebar"
+          className="fixed inset-0 z-40 bg-black/55 backdrop-blur-sm lg:hidden"
+          onClick={onMobileClose}
+          type="button"
+        />
+      )}
+
+      <div
+        className={`fixed inset-y-0 left-0 z-50 h-dvh w-[min(286px,calc(100vw_-_28px))] shrink-0 border-r border-white/[0.07] bg-[#0b0d12]/96 shadow-2xl shadow-black/50 backdrop-blur-xl transition-transform duration-200 ease-out lg:static lg:h-screen lg:w-[270px] lg:translate-x-0 lg:shadow-none ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         <div className="flex flex-col h-full">
           {/* HEADER */}
 
@@ -140,6 +160,13 @@ function SideBar() {
               onClick={handleCreateConversation}
             >
               <PenSquare size={14} />
+            </button>
+            <button
+              className="flex h-8 w-8 items-center justify-center rounded-xl border-none bg-transparent text-slate-500 transition-colors duration-150 hover:bg-white/[0.06] hover:text-slate-200 lg:hidden"
+              onClick={onMobileClose}
+              type="button"
+            >
+              <X size={15} />
             </button>
           </div>
 
@@ -176,11 +203,11 @@ function SideBar() {
               return (
                 <div
                   key={conv._id}
-                  onClick={() => dispatch(setSelectedConversation(conv))}
-                  className={`mb-1 flex cursor-pointer items-center gap-2.5 rounded-xl border px-3 py-2.5 transition-all duration-150 ${
+                  onClick={() => handleSelectConversation(conv)}
+                  className={`conversation-item mb-1 flex cursor-pointer items-center gap-2.5 rounded-xl border px-3 py-2.5 transition-all duration-150 ${
                     isActive
-                      ? "border-indigo-400/20 bg-indigo-500/10"
-                      : "border-transparent bg-transparent hover:bg-white/[0.045]"
+                      ? "border-indigo-400/25 bg-indigo-500/10 shadow-[inset_3px_0_0_rgba(34,211,238,0.55)]"
+                      : "border-transparent bg-transparent hover:translate-x-0.5 hover:bg-white/[0.045]"
                   }`}
                 >
                   <div
@@ -212,7 +239,7 @@ function SideBar() {
             {userData && (
               <div className="flex items-center gap-2.5 rounded-2xl border border-white/[0.06] bg-white/[0.025] px-3 py-2.5 transition-colors duration-150 hover:bg-white/[0.05]">
                 <div className="relative shrink-0">
-                  {userData?.avatar || !imageerror ? (
+                  {userData?.avatar && !imageerror ? (
                     <img
                       className="h-9 w-9 rounded-xl border-2 border-indigo-500/25 object-cover"
                       src={userData?.avatar}
@@ -235,9 +262,6 @@ function SideBar() {
                   </p>
                 </div>
                 <div className="flex gap-1">
-                  <button className="flex h-7 w-7 items-center justify-center rounded-lg border-none bg-transparent text-yellow-600 transition-all duration-150 hover:bg-white/[0.08] hover:text-yellow-400">
-                    <Coins size={16} />
-                  </button>
                   <button
                     className="flex h-7 w-7 items-center justify-center rounded-lg border-none bg-transparent text-slate-600 transition-all duration-150 hover:bg-white/[0.08] hover:text-slate-300"
                     onClick={handleLogout}

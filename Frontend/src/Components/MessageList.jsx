@@ -385,15 +385,15 @@ function MessageList({ isResponding, onSuggestionSelect }) {
 
   if (!selectedConversation) {
     return (
-      <div className="relative z-10 flex flex-1 items-center justify-center px-4 py-10 sm:px-6">
-        <div className="flex w-full max-w-2xl flex-col items-center gap-7 text-center">
+      <div className="relative z-10 flex flex-1 items-center justify-center px-4 py-8 sm:px-6 sm:py-10">
+        <div className="surface-pop flex w-full max-w-2xl flex-col items-center gap-6 text-center sm:gap-7">
           <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-300/25 bg-cyan-300/10 text-cyan-200 shadow-[0_0_44px_rgba(34,211,238,0.13)]">
             <span className="absolute inset-1 rounded-[14px] border border-white/[0.07]" />
             <Sparkles size={20} />
           </div>
 
           <div className="flex max-w-lg flex-col gap-2">
-            <h1 className="text-[28px] font-semibold text-slate-100">
+            <h1 className="text-[26px] font-semibold text-slate-100 sm:text-[28px]">
               AgentForge
             </h1>
             <p className="text-[15px] font-medium text-slate-300">
@@ -410,7 +410,7 @@ function MessageList({ isResponding, onSuggestionSelect }) {
                   key={suggestion.label}
                   type="button"
                   onClick={() => onSuggestionSelect?.(suggestion.prompt)}
-                  className="group flex min-h-14 cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.035] px-3 py-3 text-[12.5px] font-medium text-slate-300 shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:border-cyan-300/25 hover:bg-cyan-300/[0.07] hover:text-cyan-100 hover:shadow-[0_0_26px_rgba(34,211,238,0.08)]"
+                  className="group flex min-h-14 cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.035] px-3 py-3 text-[12.5px] font-medium text-slate-300 shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:border-cyan-300/25 hover:bg-cyan-300/[0.07] hover:text-cyan-100 hover:shadow-[0_0_26px_rgba(34,211,238,0.08)] active:translate-y-0"
                 >
                   <Icon
                     size={15}
@@ -427,7 +427,7 @@ function MessageList({ isResponding, onSuggestionSelect }) {
   }
 
   return (
-    <div className="relative z-10 flex-1 overflow-y-auto px-3 py-5 sm:px-6 sm:py-7 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="relative z-10 flex-1 overflow-y-auto px-3 py-4 sm:px-6 sm:py-7 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
         {loading && (
           <div className="flex items-center justify-center py-10 text-[13px] text-slate-500">
@@ -487,7 +487,7 @@ function MessageList({ isResponding, onSuggestionSelect }) {
             return (
               <div
                 key={message._id}
-                className={`group flex items-start gap-3 ${
+                className={`message-enter group flex items-start gap-2.5 sm:gap-3 ${
                   isUser ? "justify-end" : "justify-start"
                 }`}
               >
@@ -498,10 +498,10 @@ function MessageList({ isResponding, onSuggestionSelect }) {
                 )}
 
                 <div
-                  className={`rounded-2xl border px-4 py-3 text-[14px] leading-6 shadow-sm transition-colors duration-150 whitespace-pre-wrap break-words ${
+                  className={`rounded-2xl border px-3.5 py-3 text-[14px] leading-6 shadow-sm transition-all duration-150 whitespace-pre-wrap break-words sm:px-4 ${
                     isUser
                       ? "max-w-[86%] rounded-tr-md border-indigo-400/25 bg-linear-to-br from-indigo-500 to-violet-600 text-white shadow-indigo-950/25 sm:max-w-[78%]"
-                      : "max-w-[92%] rounded-tl-md border-white/[0.09] bg-[#171a22]/95 text-slate-200 shadow-black/20 sm:max-w-[88%]"
+                      : "max-w-[92%] rounded-tl-md border-white/[0.09] bg-[#171a22]/95 text-slate-200 shadow-black/20 hover:border-white/[0.13] sm:max-w-[88%]"
                   }`}
                 >
                   {renderMessageContent(visibleContent)}
