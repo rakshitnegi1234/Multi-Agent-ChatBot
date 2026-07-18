@@ -1,11 +1,23 @@
 import axios from "axios";
 import graph from "../Graph/graphBuilder.js";
+import { addMessage } from "../Config/memory.js";
+
+const allowedAgents = ["auto", "chat", "search", "coding"];
 
 export const  agent = async (req,res) =>
 {
    try{
+       // USER
 
-    const {prompt,conversationId} = req.body
+    const {prompt,conversationId} = req.body;
+    const requestedAgent = req.body?.agent || "auto";
+    const agent = String(requestedAgent).toLowerCase();
+
+    if (!allowedAgents.includes(agent)) {
+      return res.status(400).json({"message" : "Invalid agent selected"});
+    }
+
+     await addMessage(conversationId,"user",prompt);
 
     await axios.post(`${process.env.CHAT_SERVICE}/save-message`, {
       conversationId,
@@ -15,11 +27,15 @@ export const  agent = async (req,res) =>
 
     const result = await graph.invoke({
       prompt,
+      agent,
       conversationId,
     });
 
-   const response =  result.aiResponse;
+     // AI
 
+   const response =  result.aiResponse || result.response;
+
+ await addMessage(conversationId,"assistant",response);
 
     await axios.post(`${process.env.CHAT_SERVICE}/save-message`, {
       conversationId,
@@ -27,7 +43,11 @@ export const  agent = async (req,res) =>
       content: response
     });
 
-   return res.status(200).json(response);
+   return res.status(200).json({
+      response,
+      aiResponse: response,
+      selectedAgent: result.selectedAgent || "chat"
+   });
 
   
 

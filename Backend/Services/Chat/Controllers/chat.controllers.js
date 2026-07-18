@@ -1,6 +1,9 @@
 import Conversation from "../Models/conversation.model.js";
 import Message from "../Models/message.model.js";
 
+ 
+// IN MONGO DB FIND() RETUNRS AN ARRAY  and FINDONE REUTNS AN OBJECT
+
 export const createConversation = async (req, res) =>
 {
 

@@ -1,7 +1,14 @@
 import { getModel } from "../Config/llmModels.js"
 
+const executableAgents = ["chat", "search", "coding"];
+
 export const router = async (state) =>
 {
+   if (state.agent && state.agent !== "auto") {
+      return {
+         selectedAgent: executableAgents.includes(state.agent) ? state.agent : "chat"
+      };
+   }
 
    const llm =  await getModel("router");
    
@@ -11,7 +18,6 @@ Available agents:
 - chat
 - search
 - coding
-- vision
 
 Rules:
 
@@ -24,24 +30,19 @@ Current events, latest information, news, recent developments, internet lookup.
 coding:
 Generate code, debug code, build projects, architecture, API design.
 
-vision:
-Generate Image
-
-
-
 Return ONLY one word:
 chat
 search
 coding
-vision
 
 User Query: ${state.prompt}`;
 
 const response =  await llm.invoke(prompt);
+const selectedAgent = response.content.trim().toLowerCase();
 
 
 return  {
-  agent :response .content.trim().toLowerCase()
+  selectedAgent : executableAgents.includes(selectedAgent) ? selectedAgent : "chat"
 }
    
 }

@@ -1,8 +1,6 @@
 import { ChatGroq } from "@langchain/groq";
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 
 let groq;
-let gemini;
 const requestLimit = 10;
 const waitTimeMs = 50_000;
 const requestWindows = new Map();
@@ -45,21 +43,7 @@ const getGroqModel = () => {
     return withRateLimit(groq, "groq");
 };
 
-const getGeminiModel = () => {
-    gemini ??= new ChatGoogleGenerativeAI({
-        model: "gemini-2.5-flash",
-        temperature: 0,
-    });
-
-    return withRateLimit(gemini, "gemini");
-};
-
 export const  getModel = async (agent) =>
 {
-   if (agent === "router" || agent === "chat" || agent === "search") {
-      return getGroqModel();
-   }
-
-   return getGeminiModel();
-
+   return getGroqModel();
 }

@@ -31,16 +31,16 @@ function Home() {
 
   return (
     <>
-      <div className="h-screen flex bg-[#0d0f14] text-white overflow-hidden">
+      <div className="flex h-screen overflow-hidden bg-[#0d0f14] text-white">
         <SideBar />
         <ChatArea />
         <Artifacts />
 
         {!userData && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur">
-            <div className="w-[340px] bg-[#13151c] border border-white/[0.08] rounded-2xl p-7 flex flex-col gap-5">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 px-4 backdrop-blur">
+            <div className="flex w-full max-w-[360px] flex-col gap-5 rounded-2xl border border-white/[0.08] bg-[#13151c] p-7 shadow-2xl shadow-black/40">
               <div className="flex flex-col gap-1">
-                <h2 className="text-[17px] font-semibold text-slate-100 tracking-tight">
+                <h2 className="text-[18px] font-semibold tracking-tight text-slate-100">
                   Welcome to AgentForge
                 </h2>
                 <p className="text-[13px] text-slate-500">
@@ -49,9 +49,7 @@ function Home() {
               </div>
 
               <button
-                className="w-full flex items-center justify-center gap-3 py-[11px] rounded-xl
-text-sm font-medium text-black/90 bg-white hover:bg-gray-200 transition-all duration-150
-cursor-pointer"
+                className="flex w-full items-center justify-center gap-3 rounded-xl bg-white py-[11px] text-sm font-medium text-black/90 transition-all duration-150 hover:-translate-y-0.5 hover:bg-gray-200"
                 onClick={googleLogin}
               >
                 <FcGoogle size={18} />

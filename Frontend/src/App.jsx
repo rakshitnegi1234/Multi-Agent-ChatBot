@@ -12,11 +12,11 @@ function App() {
   useEffect(() => {
     const getUser = async () => {
       const data = await getCurrentUser();
-      dispatch(setUserdata(data));
+      dispatch(setUserdata(data?.userId ? { ...data, _id: data.userId } : data));
     };
 
     getUser();
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

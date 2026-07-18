@@ -1,4 +1,5 @@
 # AGENTFORGE
+
 An AI chat application built with the MERN stack, microservices, LangGraph, Groq, Tavily, Redis, and Firebase authentication. The app supports authenticated conversations, persistent chat history, automatic/manual agent routing, web search grounded responses, and a frontend artifact panel for generated code previews.
 
 ## Features
