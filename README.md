@@ -124,34 +124,13 @@ Default local URLs:
 
 ### Architecture
 
-```mermaid
-flowchart LR
-  User[User] --> Frontend[React Frontend]
-  Frontend --> Gateway[API Gateway]
+ 
+<img width="1292" height="606" alt="image" src="https://github.com/user-attachments/assets/31b87f62-afb6-4a33-b51b-3b19d07368ff" />
 
-  Gateway --> Auth[Auth Service]
-  Gateway --> Chat[Chat Service]
-  Gateway --> Agent[Agent Service]
+### LANGGRAPH FLOW
 
-  Auth --> Firebase[Firebase Admin]
-  Auth --> Users[(MongoDB Users)]
-  Auth --> Redis[(Redis Sessions)]
+<img width="1115" height="613" alt="image" src="https://github.com/user-attachments/assets/57c06271-79b5-4342-93ab-379a3305b3c9" />
 
-  Gateway --> Redis
-
-  Chat --> Conversations[(MongoDB Conversations)]
-  Chat --> Messages[(MongoDB Messages)]
-
-  Agent --> LangGraph[LangGraph Workflow]
-  LangGraph --> Router[Router Node]
-  Router --> ChatAgent[Chat Agent]
-  Router --> CodingAgent[Coding Agent]
-  Router --> SearchAgent[Search Agent]
-  SearchAgent --> Tavily[Tavily Search API]
-  ChatAgent --> Groq[Groq LLM]
-  CodingAgent --> Groq
-  Agent --> Chat
-```
 
 ## Project Structure
 
